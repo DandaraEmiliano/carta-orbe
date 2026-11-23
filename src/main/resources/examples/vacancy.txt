@@ -1,0 +1,7 @@
+Engenheira de Software Backend | Horizonte Logística
+
+A Horizonte Logística está evoluindo sua plataforma de rastreamento, com foco em respostas rápidas e informações confiáveis sobre entregas. A equipe oferece autonomia para propor melhorias, trabalha em conjunto com produto e acompanha indicadores após cada entrega.
+
+Responsabilidades: desenvolver APIs REST em Java e Spring Boot, investigar lentidão em PostgreSQL, escrever testes de integração e contribuir para observabilidade e revisões de código.
+
+Diferenciais: experiência com processamento de eventos, idempotência ou documentação operacional.

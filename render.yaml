@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: carta-orbe
+    runtime: docker
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: ORBE_MODEL_ENABLED
+        value: "false"

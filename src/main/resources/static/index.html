@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Escreva cartas de apresentação a partir do seu currículo e das exigências de uma vaga.">
+  <title>Carta Orbe</title>
+  <link rel="stylesheet" href="/style.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <header class="masthead">
+    <div class="container topbar">
+      <a class="brand" href="/" aria-label="Carta Orbe, início"><span class="brand-mark" aria-hidden="true">✦</span> Carta Orbe</a>
+      <button type="button" id="sample" class="sample">Usar exemplo</button>
+    </div>
+    <div class="container introduction">
+      <h1>Cartas de apresentação<br> sob medida</h1>
+      <p>Conecte sua experiência ao que a vaga pede. Escreva em português, inglês ou espanhol.</p>
+    </div>
+  </header>
+  <main class="container workspace">
+    <form id="form" class="panel">
+      <h2>Dados da candidatura</h2>
+      <p id="mode" class="notice" hidden></p>
+      <label for="name">Nome para assinatura</label>
+      <input id="name" name="name" autocomplete="name" required minlength="2" maxlength="100" placeholder="Seu nome">
+      <div class="label-row">
+        <label for="resume">Currículo</label>
+        <button id="choose-file" class="text-button" type="button">Importar .txt ou .tex</button>
+        <input id="file" type="file" accept=".txt,.tex" hidden>
+      </div>
+      <textarea id="resume" name="resume" required minlength="40" maxlength="12000" rows="5" placeholder="Cole suas experiências, projetos e resultados."></textarea>
+      <label for="url">Link da vaga <span>opcional</span></label>
+      <div class="import-row">
+        <input id="url" name="url" type="url" maxlength="2048" placeholder="https://…" aria-describedby="job-help">
+        <button id="import" class="secondary" type="button">Importar</button>
+      </div>
+      <small id="job-help">Greenhouse, Lever ou Ashby. Para outros sites, cole o texto abaixo.</small>
+      <label for="vacancy">Descrição da vaga</label>
+      <textarea id="vacancy" name="vacancy" required minlength="40" maxlength="10000" rows="4" placeholder="Inclua a empresa, o cargo e os requisitos principais."></textarea>
+      <div class="options">
+        <div>
+          <label for="language">Idioma da carta</label>
+          <select id="language" name="language" required>
+            <option value="" selected disabled>Selecione o idioma</option>
+            <option value="PT">Português (Brasil)</option>
+            <option value="EN">English</option>
+            <option value="ES">Español</option>
+          </select>
+        </div>
+        <div>
+          <label for="tone">Tom</label>
+          <select id="tone" name="tone">
+            <option value="PROFESSIONAL">Profissional</option>
+            <option value="FORMAL">Formal</option>
+            <option value="DIRECT">Direto</option>
+            <option value="ENTHUSIASTIC">Entusiasmado</option>
+          </select>
+        </div>
+      </div>
+      <label for="emphasis">Experiência a destacar <span>opcional</span></label>
+      <input id="emphasis" name="emphasis" maxlength="250" placeholder="Ex.: projeto de migração para PostgreSQL">
+      <div id="access" hidden>
+        <label for="code">Código de acesso</label>
+        <input id="code" type="password" maxlength="200" autocomplete="off">
+      </div>
+      <label id="remote" class="consent" hidden><input id="consent" type="checkbox"> Autorizo o envio dos dados ao serviço de IA configurado nesta instância.</label>
+      <button type="submit" id="generate" class="primary">Gerar carta</button>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+    </form>
+    <section id="result" class="panel preview" aria-labelledby="preview-title">
+      <div class="preview-head">
+        <div><h2 id="preview-title" tabindex="-1">Sua carta</h2><p id="metadata">3 a 4 parágrafos · 250 a 380 palavras</p></div>
+      </div>
+      <div id="empty" class="empty">
+        <div class="paper-mark" aria-hidden="true"><i></i><i></i><i></i></div>
+        <strong>A carta aparece aqui</strong>
+        <p>Preencha os dados e escolha o idioma para gerar um rascunho.</p>
+      </div>
+      <div id="output" hidden>
+        <label class="sr-only" for="letter">Texto editável da carta</label>
+        <textarea id="letter" spellcheck="true" rows="17"></textarea>
+        <div class="actions">
+          <button id="copy" type="button" class="secondary">Copiar texto</button>
+          <button id="download" type="button" class="secondary">Baixar .txt</button>
+          <button id="print" type="button" class="secondary">Imprimir / PDF</button>
+        </div>
+        <details id="evidence"><summary>Trechos do currículo usados</summary><ul id="quotes"></ul></details>
+        <p id="output-status" class="status" role="status"></p>
+      </div>
+    </section>
+  </main>
+  <article id="print-letter" aria-hidden="true"></article>
+</body>
+</html>

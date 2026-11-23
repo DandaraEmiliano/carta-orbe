@@ -1,0 +1,13 @@
+{
+  "paragraphs": [
+    "Horizonte Logística’s focus on fast, reliable shipment tracking connects directly to my work at Nuvem Circular. I built delivery tracking APIs with Java and Spring Boot and worked alongside the product team when incidents affected the system. What interests me about this role is the chance to make tracking responses more useful to the people who rely on them to understand what happened to a delivery and decide what to do next.",
+    "At Nuvem Circular, I reviewed PostgreSQL queries and indexes and reduced 95th percentile response time from 820 ms to 310 ms. I also wrote integration tests with Testcontainers and took part in code reviews. I would bring that combination of performance work and integration testing to Horizonte’s REST APIs, where measurements can show whether an improvement worked and tests can protect the behavior the team and its users rely on.",
+    "For the Rotas Claras project, I implemented idempotent reprocessing for tracking events and documented the recovery procedure. Making reprocessing idempotent means an event can be retried without applying the same change twice, which matters when delivery status depends on incoming events. Documenting the procedure also gives the team a shared reference during recovery. I would draw on that experience as Horizonte evolves the parts of its platform that process and recover tracking events.",
+    "I would also welcome the opportunity to help the team decide which signals to watch after a release. I have built latency dashboards and worked with product during incidents, and I would bring that perspective to discussions about what to measure and how to respond when results change. I’d like to discuss where faster responses or a more predictable recovery process could make the biggest difference for Horizonte’s tracking platform."
+  ],
+  "evidence": [
+    "Desenvolvi APIs REST com Java, Spring Boot e PostgreSQL para rastreamento de entregas.",
+    "Reduzi o tempo de resposta no percentil 95 de 820 ms para 310 ms com revisões de consultas e índices.",
+    "Implementei reprocessamento idempotente de eventos de rastreamento e documentei o procedimento de recuperação."
+  ]
+}
