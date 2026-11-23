@@ -7,6 +7,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.net.http.HttpTimeoutException;
 import java.security.MessageDigest;
 import java.time.Duration;
 import java.util.List;
@@ -102,6 +103,8 @@ class OllamaLetterWriter {
             }
             throw new ApiProblem(HttpStatus.BAD_GATEWAY,
                     "O modelo não conseguiu seguir o formato da carta. Tente novamente ou use um modelo mais capaz.");
+        } catch (HttpTimeoutException failure) {
+            throw new ApiProblem(HttpStatus.GATEWAY_TIMEOUT, "O modelo demorou mais de três minutos. Tente um CV mais curto ou um modelo mais rápido.");
         } catch (IOException failure) {
             throw new ApiProblem(HttpStatus.SERVICE_UNAVAILABLE, "O modelo está indisponível. Confira o endereço e o modelo no Ollama.");
         } catch (InterruptedException interrupted) {
@@ -117,11 +120,12 @@ class OllamaLetterWriter {
                 "name", request.name(), "resume", request.resume(), "vacancy", request.vacancy(),
                 "emphasis", request.emphasis()));
         String system = correction.isBlank() ? INSTRUCTIONS : INSTRUCTIONS + "\nRequired correction: " + correction;
+        int context = Math.min(12288, Math.max(4096, ((user.length() / 3 + 2999) / 1024 + 1) * 1024));
         var body = Map.of("model", model, "stream", false, "format", SCHEMA,
-                "options", Map.of("num_ctx", 12288, "num_predict", 1500, "temperature", 0.35),
+                "options", Map.of("num_ctx", context, "num_predict", 1100, "temperature", 0.35),
                 "messages", List.of(Map.of("role", "system", "content", system),
                         Map.of("role", "user", "content", user)));
-        var call = HttpRequest.newBuilder(endpoint).timeout(Duration.ofSeconds(60))
+        var call = HttpRequest.newBuilder(endpoint).timeout(Duration.ofMinutes(3))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(mapper.writeValueAsString(body)));
         if (!key.isBlank()) {

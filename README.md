@@ -2,6 +2,8 @@
 
 Gerador de cartas de apresentação em **Java 21 e Spring Boot**. Importe um currículo em `.txt` ou `.tex`, informe a vaga e escolha português do Brasil, inglês ou espanhol. O formulário permite ajustar o tom e destacar uma experiência. A carta abre em um editor com opções de copiar, baixar o texto ou salvar em PDF pelo navegador.
 
+[**Testar a demo online**](https://carta-orbe.onrender.com/)
+
 [![CI](https://github.com/DandaraEmiliano/carta-orbe/actions/workflows/ci.yml/badge.svg)](https://github.com/DandaraEmiliano/carta-orbe/actions/workflows/ci.yml)
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/DandaraEmiliano/carta-orbe)

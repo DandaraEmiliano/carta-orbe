@@ -69,7 +69,7 @@ class LetterController {
 
     record Vacancy(String url) {}
     record LetterInput(String name, String resume, String vacancy, Letter.Language language,
-                       Letter.Tone tone, String emphasis) {}
+                       Letter.Tone tone, String emphasis, boolean remoteConsent) {}
 
     @PostMapping(value = "/vacancy", consumes = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<VacancyImport.Imported> vacancy(@RequestBody Vacancy vacancy) {
@@ -81,6 +81,9 @@ class LetterController {
             @RequestHeader(value = "X-Orbe-Access", defaultValue = "") String code) {
         if (input.language() == null) {
             throw bad("Confirme o idioma da carta.");
+        }
+        if (writer.enabled() && writer.remote() && !input.remoteConsent()) {
+            throw bad("Confirme o envio ao serviço de IA configurado nesta instância.");
         }
         String resume = text(input.resume(), 40, 12000, "currículo");
         boolean latex = resume.contains("\\begin{document}") || resume.contains("\\documentclass")

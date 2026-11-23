@@ -59,10 +59,11 @@ flowchart TD
   "vacancy": "Engenharia de backend na Horizonte Logística. Requisitos: Java, Spring Boot e APIs REST.",
   "language": "EN",
   "tone": "PROFESSIONAL",
-  "emphasis": "Rastreamento de entregas"
+  "emphasis": "Rastreamento de entregas",
+  "remoteConsent": false
 }
 ```
 
-A API retorna `400` para dados inválidos, `403` para código incorreto, `413` para arquivo acima do limite, `422` para link indisponível, `429` para geração concorrente, `502` para saída inválida do modelo e `503` para modelo indisponível ou desativado. As respostas com conteúdo pessoal usam `Cache-Control: no-store`. O indicador de saúde verifica o processo, independentemente de o modelo estar disponível.
+A API retorna `400` para dados inválidos, `403` para código incorreto, `413` para arquivo acima do limite, `422` para link indisponível, `429` para geração concorrente, `502` para saída inválida do modelo, `503` para modelo indisponível ou desativado e `504` quando o modelo ultrapassa o prazo de resposta. A geração remota exige `remoteConsent: true`. As respostas com conteúdo pessoal usam `Cache-Control: no-store`. O indicador de saúde verifica o processo, independentemente de o modelo estar disponível.
 
 A importação de vagas limita tamanho e espera, permite anfitriões HTTPS explícitos e não segue redirecionamentos. Currículo e descrição são enviados ao modelo como dados JSON, com instruções para ignorar comandos encontrados no conteúdo.

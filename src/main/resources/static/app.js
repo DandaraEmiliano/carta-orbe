@@ -160,7 +160,7 @@ form.addEventListener('submit', async (event) => {
     }
     status(usingExample ? 'Carregando carta de exemplo…' : 'Gerando a carta. Isso pode levar alguns instantes…');
     const result = usingExample ? await api('/examples/' + input.language)
-      : await post('/letters', input, byId('code').value);
+      : await post('/letters', { ...input, remoteConsent: byId('consent').checked }, byId('code').value);
     render(result, input.language);
     status('Carta pronta para revisão.');
   } catch (error) {
