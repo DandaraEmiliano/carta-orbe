@@ -1,12 +1,33 @@
 # Carta Orbe
 
-Gerador de cartas de apresentação em **Java 21 e Spring Boot**. Importe um currículo em `.txt` ou `.tex`, informe a vaga e escolha português do Brasil, inglês ou espanhol. O formulário permite ajustar o tom e destacar uma experiência. A carta abre em um editor com opções de copiar, baixar o texto ou salvar em PDF pelo navegador.
+Transforme seu currículo e a descrição de uma vaga em uma **carta de apresentação personalizada**, em português do Brasil, inglês ou espanhol.
 
-[**Testar a demo online**](https://carta-orbe.onrender.com/)
+**Java 21 · Spring Boot · JavaScript · Ollama · Docker**
+
+[**Testar a demo online**](https://carta-orbe.onrender.com/) · [Rodar com seu currículo](#use-seu-currículo) · [Ver a arquitetura](docs/arquitetura.md)
 
 [![CI](https://github.com/DandaraEmiliano/carta-orbe/actions/workflows/ci.yml/badge.svg)](https://github.com/DandaraEmiliano/carta-orbe/actions/workflows/ci.yml)
-
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/DandaraEmiliano/carta-orbe)
+
+## O produto
+
+[![Tela do Carta Orbe com o formulário da candidatura à esquerda e uma carta editável em português à direita](docs/painel.jpg)](https://carta-orbe.onrender.com/)
+
+<sub>Captura da demo com uma candidatura fictícia e os trechos do currículo que sustentam a carta.</sub>
+
+## Como a carta é gerada
+
+```mermaid
+flowchart LR
+    CV["Currículo<br/>.txt, .tex ou texto"] --> FORM["Idioma, tom<br/>e experiência a destacar"]
+    JOB["Vaga<br/>Link ou descrição"] --> FORM
+    FORM --> JAVA["API Java<br/>Valida e prepara os dados"]
+    JAVA --> MODEL["Ollama<br/>Redige a carta"]
+    MODEL --> CHECK["API Java<br/>Confere formato e citações"]
+    CHECK --> OUT["Editor<br/>Copiar, baixar ou salvar em PDF"]
+```
+
+O editor mostra a contagem de palavras e as citações literais do currículo. A geração com seu CV usa o Ollama. A demo online apresenta a mesma experiência com cartas fictícias prontas nos três idiomas.
 
 ## Experimente
 
