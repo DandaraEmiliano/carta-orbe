@@ -31,10 +31,12 @@ class OllamaLetterWriter {
             Write four complete prose paragraphs of 65 to 85 words each. Aim for 290 words total.
             1. Specific interest in this employer and role. 2. Connect evidenced strengths to the role.
             3. Explain a distinct project or result. 4. State a contribution and invite a conversation.
-            Write in first person and active voice. Keep greetings, signatures, headings, placeholders,
-            generic openings and long dashes out of the paragraphs.
-            Only claim facts supported by the resume. Preserve names and numbers. If evidence is limited,
-            explain why a documented skill matters or how it would support future work.
+            Write in first person and active voice. Start with the employer's work, not a stock phrase
+            about applying or being excited. Avoid greetings, signatures, headings, placeholders and long dashes.
+            Translate ordinary phrases and preserve proper names. Only claim facts supported by the resume.
+            When citing a metric, state the exact activity from that same resume line. Keep achievements
+            separate and never attribute a result to an activity or project from a different line.
+            If evidence is limited, explain why a documented skill matters to the role.
             Return paragraphs and evidenceIds. Choose 2 to 4 resume line IDs that support the letter.
             IDs start at 1. Select lines with at least 15 characters. Do not copy or translate the lines.
             """;

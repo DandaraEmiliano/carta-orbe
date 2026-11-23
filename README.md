@@ -50,6 +50,8 @@ mvn spring-boot:run
 
 Se o serviço do Ollama estiver parado, execute `ollama serve` em outro terminal. A aplicação usa `http://127.0.0.1:11434` por padrão. Use `ORBE_MODEL_NAME` para selecionar outro modelo instalado que ofereça saída JSON estruturada.
 
+A geração local pode levar alguns minutos, conforme o modelo e o hardware.
+
 1. Digite seu nome e cole o CV, ou importe um PDF com texto selecionável (até 2 MB e 12 páginas), um TXT ou um TEX em UTF-8 (até 64 KB).
 2. Importe um link público do Greenhouse, Lever ou Ashby. Se a importação não funcionar, cole a descrição ou informe cargo, empresa e requisitos.
 3. Confirme o idioma e, se desejar, ajuste o tom ou indique uma experiência do seu currículo.
