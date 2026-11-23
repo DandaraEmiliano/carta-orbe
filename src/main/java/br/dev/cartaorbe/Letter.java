@@ -10,9 +10,9 @@ final class Letter {
     private static final Pattern DASH = Pattern.compile("\\s*(?:-{2,}|[–—―])\\s*");
 
     enum Language {
-        PT("português do Brasil", "Olá, equipe de recrutamento,", "Atenciosamente,"),
-        EN("English", "Dear Hiring Team,", "Sincerely,"),
-        ES("español", "Estimado equipo de selección:", "Atentamente,");
+        PT("Brazilian Portuguese (pt-BR)", "Olá, equipe de recrutamento,", "Atenciosamente,"),
+        EN("English (en)", "Dear Hiring Team,", "Sincerely,"),
+        ES("Spanish (es)", "Estimado equipo de selección:", "Atentamente,");
 
         final String label;
         final String greeting;

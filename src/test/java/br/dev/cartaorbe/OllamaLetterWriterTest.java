@@ -14,10 +14,11 @@ class OllamaLetterWriterTest {
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    void retriesAnInvalidDraftAndResolvesEvidenceIds() throws Exception {
+    void retriesADraftInTheWrongLanguageAndResolvesEvidenceIds() throws Exception {
         String source = "Desenvolvi APIs para rastreamento de entregas com Java.";
         String paragraph = "I build integrations with measurable improvements for teams. ".repeat(11).strip();
-        byte[] shortDraft = response(List.of("A short draft"), List.of(2));
+        String portuguese = "Trabalhei com minha equipe para melhorar o rastreamento das entregas. ".repeat(9).strip();
+        byte[] mixedDraft = response(List.of(paragraph, portuguese, paragraph), List.of(2));
         byte[] validDraft = response(List.of(paragraph, paragraph, paragraph), List.of(2, 99));
 
         var calls = new AtomicInteger();
@@ -25,7 +26,7 @@ class OllamaLetterWriterTest {
         server.createContext("/api/chat", call -> {
             try (call) {
                 call.getRequestBody().readAllBytes();
-                byte[] response = calls.getAndIncrement() == 0 ? shortDraft : validDraft;
+                byte[] response = calls.getAndIncrement() == 0 ? mixedDraft : validDraft;
                 call.getResponseHeaders().set("Content-Type", "application/json");
                 call.sendResponseHeaders(200, response.length);
                 call.getResponseBody().write(response);

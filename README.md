@@ -31,7 +31,7 @@ O editor mostra a contagem de palavras e as citações literais do currículo. A
 
 ## Experimente
 
-Com **Java 21** e **Maven** disponíveis, execute na raiz do projeto:
+Na raiz do projeto, execute o comando abaixo com **Java 21** e **Maven**.
 
 ```bash
 ORBE_MODEL_ENABLED=false mvn spring-boot:run
@@ -41,10 +41,10 @@ Abra [http://localhost:8080](http://localhost:8080), clique em **Usar exemplo**,
 
 ## Use seu currículo
 
-Com o [Ollama](https://ollama.com/) em execução na máquina, prepare o modelo e inicie a aplicação:
+Com o [Ollama](https://ollama.com/) em execução na máquina, prepare o modelo e inicie a aplicação com os comandos abaixo.
 
 ```bash
-ollama pull llama3.2
+ollama pull qwen3:4b
 mvn spring-boot:run
 ```
 
@@ -80,7 +80,7 @@ Para hospedar geração com currículos próprios, configure um endpoint Ollama 
 | `BIND_ADDRESS` | `127.0.0.1` | Endereço HTTP. O contêiner usa `0.0.0.0`. |
 | `ORBE_MODEL_ENABLED` | `true` | Permite geração personalizada. O Blueprint usa `false`. |
 | `ORBE_MODEL_URL` | `http://127.0.0.1:11434` | Base do Ollama |
-| `ORBE_MODEL_NAME` | `llama3.2` | Identificador de modelo disponível no Ollama |
+| `ORBE_MODEL_NAME` | `qwen3:4b` | Identificador de modelo disponível no Ollama |
 | `ORBE_MODEL_KEY` | Vazio | Token do provedor para endpoint HTTPS autenticado |
 | `ORBE_ACCESS_CODE` | Vazio | Código de acesso da instância para geração personalizada |
 
