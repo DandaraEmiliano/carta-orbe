@@ -1,6 +1,6 @@
 # Política de escrita
 
-O Carta Orbe pede nome, currículo, descrição da vaga e confirmação explícita do idioma. O currículo pode ser importado como texto ou LaTeX básico. O campo de destaque permite pedir ênfase em uma experiência que já consta no CV.
+O Carta Orbe pede nome, currículo, descrição da vaga e confirmação explícita do idioma. O currículo pode ser importado como PDF com texto selecionável, texto simples ou LaTeX básico. O campo de destaque permite pedir ênfase em uma experiência que já consta no CV.
 
 | Parte | Conteúdo |
 | --- | --- |
@@ -11,6 +11,6 @@ O Carta Orbe pede nome, currículo, descrição da vaga e confirmação explíci
 
 A carta usa primeira pessoa, tom ajustável e até quatro parágrafos. O sistema acrescenta saudação, despedida e nome, verifica a faixa de 250 a 380 palavras e remove travessões. A impressão usa apenas o texto da carta, com margens de 20 mm.
 
-O modelo retorna citações literais, no idioma original do CV, para facilitar a conferência. Quando uma citação não existe no texto normalizado ou a saída desrespeita o formato, o servidor pede uma correção uma vez. Verificar citações literais ajuda na revisão, mas não comprova que cada afirmação da carta é verdadeira.
+O modelo indica as linhas numeradas do CV que apoiam o rascunho. O servidor resolve os números para devolver citações literais no idioma original. Quando faltam referências válidas ou a saída desrespeita o formato, o servidor pede uma correção. As citações facilitam a revisão dos fatos e resultados mencionados.
 
 O editor permite revisar e exportar o texto. Para ajustar tom, idioma ou experiência destacada, altere o formulário e gere um novo rascunho.

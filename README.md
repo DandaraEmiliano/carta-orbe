@@ -19,12 +19,12 @@ Transforme seu currículo e a descrição de uma vaga em uma **carta de apresent
 
 ```mermaid
 flowchart LR
-    CV["Currículo<br/>.txt, .tex ou texto"] --> FORM["Idioma, tom<br/>e experiência a destacar"]
+    CV["Currículo<br/>PDF, TXT, TEX ou texto"] --> FORM["Idioma, tom<br/>e experiência a destacar"]
     JOB["Vaga<br/>Link ou descrição"] --> FORM
     FORM --> JAVA["API Java<br/>Valida e prepara os dados"]
     JAVA --> MODEL["Ollama<br/>Redige a carta"]
     MODEL --> CHECK["API Java<br/>Confere formato e citações"]
-    CHECK --> OUT["Editor<br/>Copiar, baixar ou salvar em PDF"]
+    CHECK --> OUT["Editor<br/>Copiar ou baixar em TXT e PDF"]
 ```
 
 O editor mostra a contagem de palavras e as citações literais do currículo. A geração com seu CV usa o Ollama. A demo online apresenta a mesma experiência com cartas fictícias prontas nos três idiomas.
@@ -50,16 +50,18 @@ mvn spring-boot:run
 
 Se o serviço do Ollama estiver parado, execute `ollama serve` em outro terminal. A aplicação usa `http://127.0.0.1:11434` por padrão. Use `ORBE_MODEL_NAME` para selecionar outro modelo instalado que ofereça saída JSON estruturada.
 
-1. Digite seu nome e cole o CV, ou importe um arquivo UTF-8 de até 64 KB.
+1. Digite seu nome e cole o CV, ou importe um PDF com texto selecionável (até 2 MB e 12 páginas), um TXT ou um TEX em UTF-8 (até 64 KB).
 2. Importe um link público do Greenhouse, Lever ou Ashby. Se a importação não funcionar, cole a descrição ou informe cargo, empresa e requisitos.
 3. Confirme o idioma e, se desejar, ajuste o tom ou indique uma experiência do seu currículo.
-4. Gere a carta, confira as experiências citadas e edite o texto antes de exportar. Para alterar o idioma ou o tom, mude a seleção e gere novamente.
+4. Gere a carta, confira as experiências citadas e edite o texto. Baixe a carta como TXT ou como PDF de uma página A4.
+
+Ao importar um PDF, o texto extraído aparece no campo **Currículo**. Você pode corrigir a ordem e baixar o resultado como TXT. PDFs digitalizados precisam passar por OCR antes da importação.
 
 A aplicação valida três ou quatro parágrafos de corpo, entre 250 e 380 palavras no texto final, e remove travessões e hífens duplos. A IA recebe instruções para usar somente fatos do currículo. A validação das citações verifica a presença dos trechos no CV. Revise as afirmações e números da carta antes de enviá-la.
 
 ## Arquitetura
 
-O Spring Boot serve a interface HTML, CSS e JavaScript e a API na mesma origem. A API normaliza o LaTeX como texto, valida os dados, chama o Ollama e formata o resultado. Currículos e cartas são processados em memória. O app não tem banco de dados nem histórico.
+O Spring Boot serve a interface HTML, CSS e JavaScript e a API na mesma origem. O Apache PDFBox extrai texto de currículos e gera o PDF da carta. A API também normaliza arquivos LaTeX, valida os dados e chama o Ollama. Currículos e cartas são processados em memória. O app não tem banco de dados nem histórico.
 
 - [Arquitetura, fluxograma e contrato da API](docs/arquitetura.md)
 - [Política de escrita e validações](docs/geracao.md)

@@ -11,4 +11,4 @@ COPY --from=build /build/target/carta-orbe-0.1.0.jar /app/carta-orbe.jar
 ENV BIND_ADDRESS=0.0.0.0 PORT=8080
 USER 10001
 EXPOSE 8080
-ENTRYPOINT ["java", "-XX:MaxRAMPercentage=65.0", "-jar", "/app/carta-orbe.jar"]
+ENTRYPOINT ["java", "-XX:MaxRAMPercentage=65.0", "-Dpdfbox.fontcache=/tmp", "-jar", "/app/carta-orbe.jar"]

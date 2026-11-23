@@ -43,6 +43,7 @@ select { appearance: none; padding-right: 2rem; background: #fbfdfc; }
 .import-row, .options { display: grid; grid-template-columns: 1fr auto; gap: .6rem; }
 .options { grid-template-columns: 1fr 1fr; }
 .text-button { color: var(--green); text-decoration: underline; background: none; border: 0; padding: 0; font-size: .88rem; }
+.resume-export { margin-top: .4rem; }
 .secondary, .primary { border-radius: 7px; padding: .6rem .8rem; font-weight: 650; }
 .secondary { background: #fff; border: 1px solid #a9c3b6; color: #155643; font-size: .88rem; }
 .secondary:hover { background: #eff7f2; }

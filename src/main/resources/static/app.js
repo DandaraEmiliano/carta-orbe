@@ -13,14 +13,16 @@ function status(message, error = false, id = 'status') {
   byId(id).dataset.error = String(error);
 }
 
-async function api(path, options) {
+async function request(path, options) {
   const response = await fetch('/api' + path, options);
   if (!response.ok) {
     const problem = await response.json().catch(() => ({}));
     throw new Error(problem.detail || 'A solicitação falhou. Tente novamente.');
   }
-  return response.json();
+  return response;
 }
+
+const api = async (path, options) => (await request(path, options)).json();
 
 function post(path, data, access = '') {
   const headers = { 'Content-Type': 'application/json' };
@@ -83,7 +85,9 @@ byId('sample').addEventListener('click', async () => {
   try {
     byId('sample').disabled = true;
     example = await api('/examples');
+    importing++;
     Object.entries(example).forEach(([key, value]) => { byId(key).value = value; });
+    byId('download-resume').hidden = true;
     byId('url').value = '';
     byId('tone').value = 'PROFESSIONAL';
     byId('emphasis').value = '';
@@ -110,7 +114,9 @@ byId('file').addEventListener('change', async () => {
     const response = await api('/resume', { method: 'POST', body: data });
     if (version !== importing || initialText !== byId('resume').value) return;
     byId('resume').value = response.text;
-    status('Currículo importado. Revise o conteúdo antes de gerar.');
+    byId('download-resume').hidden = !response.pdf;
+    status(response.pdf ? 'Texto do PDF extraído. Revise a ordem e o conteúdo antes de gerar.'
+      : 'Currículo importado. Revise o conteúdo antes de gerar.');
   } catch (error) {
     if (version === importing) status(error.message, true);
   }
@@ -183,14 +189,41 @@ byId('copy').addEventListener('click', async () => {
     status('Texto selecionado. Use o comando de copiar do navegador.', false, 'output-status');
   }
 });
-byId('download').addEventListener('click', () => {
-  const file = new Blob([letter.value + '\n'], { type: 'text/plain;charset=utf-8' });
+function download(file, name) {
   const url = URL.createObjectURL(file);
   const link = document.createElement('a');
-  link.download = 'carta-orbe-' + langCodes[displayed.language] + '.txt';
+  link.download = name;
   link.href = url;
   link.click();
   setTimeout(() => URL.revokeObjectURL(url), 10000);
+}
+
+function textFile(value) {
+  return new Blob([value + '\n'], { type: 'text/plain;charset=utf-8' });
+}
+
+byId('download-resume').addEventListener('click', () => {
+  const text = byId('resume').value.trim();
+  if (text) download(textFile(text), 'curriculo-extraido.txt');
+});
+byId('download').addEventListener('click', () => {
+  download(textFile(letter.value), 'carta-orbe-' + langCodes[displayed.language] + '.txt');
+});
+byId('download-pdf').addEventListener('click', async () => {
+  const button = byId('download-pdf');
+  const language = displayed.language;
+  button.disabled = true;
+  try {
+    const response = await request('/export/pdf', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: letter.value })
+    });
+    download(await response.blob(), 'carta-orbe-' + langCodes[language] + '.pdf');
+    status('PDF baixado.', false, 'output-status');
+  } catch (error) {
+    status(error.message, true, 'output-status');
+  } finally {
+    button.disabled = false;
+  }
 });
 byId('print').addEventListener('click', () => window.print());
 window.addEventListener('beforeprint', () => {

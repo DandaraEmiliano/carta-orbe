@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.CodingErrorAction;
+import java.text.Normalizer;
 import java.util.Locale;
 import java.util.Map;
 import org.springframework.http.CacheControl;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
@@ -23,11 +26,13 @@ class LetterController {
     private final OllamaLetterWriter writer;
     private final DemoLetters demo;
     private final VacancyImport vacancies;
+    private final PdfDocuments pdf;
 
-    LetterController(OllamaLetterWriter writer, DemoLetters demo, VacancyImport vacancies) {
+    LetterController(OllamaLetterWriter writer, DemoLetters demo, VacancyImport vacancies, PdfDocuments pdf) {
         this.writer = writer;
         this.demo = demo;
         this.vacancies = vacancies;
+        this.pdf = pdf;
     }
 
     @GetMapping("/settings")
@@ -46,13 +51,19 @@ class LetterController {
         return demo.letter(language);
     }
 
-    record Resume(String text) {}
+    record Resume(String text, boolean pdf) {}
 
     @PostMapping(value = "/resume", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<Resume> resume(@RequestParam("file") MultipartFile file) throws IOException {
         String name = file.getOriginalFilename() == null ? "" : file.getOriginalFilename().toLowerCase(Locale.ROOT);
+        if (name.endsWith(".pdf")) {
+            return privateResponse(new Resume(pdf.extract(file.getBytes()), true));
+        }
         if (!(name.endsWith(".tex") || name.endsWith(".txt"))) {
-            throw bad("Escolha um arquivo .txt ou .tex.");
+            throw bad("Escolha um arquivo .pdf, .txt ou .tex.");
+        }
+        if (file.getSize() > 64 * 1024) {
+            throw new ApiProblem(HttpStatus.PAYLOAD_TOO_LARGE, "Arquivos .txt e .tex devem ter até 64 KB.");
         }
         try {
             String decoded = UTF_8.newDecoder().onMalformedInput(CodingErrorAction.REPORT)
@@ -61,10 +72,20 @@ class LetterController {
                 throw bad("O arquivo deve conter texto em UTF-8.");
             }
             String clean = text(ResumeText.normalize(decoded, name.endsWith(".tex")), 40, 12000, "currículo");
-            return privateResponse(new Resume(clean));
+            return privateResponse(new Resume(clean, false));
         } catch (CharacterCodingException invalid) {
             throw bad("O arquivo deve conter texto em UTF-8.");
         }
+    }
+
+    record Export(String text) {}
+
+    @PostMapping(value = "/export/pdf", consumes = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<byte[]> export(@RequestBody Export input) throws IOException {
+        String content = Normalizer.normalize(text(input.text(), 1, 6000, "texto da carta"), Normalizer.Form.NFC);
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment().filename("carta-orbe.pdf").build().toString())
+                .body(pdf.letter(content));
     }
 
     record Vacancy(String url) {}
@@ -104,7 +125,7 @@ class LetterController {
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     ResponseEntity<ProblemDetail> uploadLimit() {
-        return apiProblem(new ApiProblem(HttpStatus.PAYLOAD_TOO_LARGE, "O arquivo deve ter até 64 KB."));
+        return apiProblem(new ApiProblem(HttpStatus.PAYLOAD_TOO_LARGE, "O arquivo deve ter até 2 MB."));
     }
 
     private static <T> ResponseEntity<T> privateResponse(T content) {

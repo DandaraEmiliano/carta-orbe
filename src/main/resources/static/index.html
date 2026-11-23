@@ -27,10 +27,11 @@
       <input id="name" name="name" autocomplete="name" required minlength="2" maxlength="100" placeholder="Seu nome">
       <div class="label-row">
         <label for="resume">Currículo</label>
-        <button id="choose-file" class="text-button" type="button">Importar .txt ou .tex</button>
-        <input id="file" type="file" accept=".txt,.tex" hidden>
+        <button id="choose-file" class="text-button" type="button">Importar PDF, TXT ou TEX</button>
+        <input id="file" type="file" accept=".pdf,.txt,.tex,application/pdf" hidden>
       </div>
       <textarea id="resume" name="resume" required minlength="40" maxlength="12000" rows="5" placeholder="Cole suas experiências, projetos e resultados."></textarea>
+      <button id="download-resume" class="text-button resume-export" type="button" hidden>Baixar texto extraído</button>
       <label for="url">Link da vaga <span>opcional</span></label>
       <div class="import-row">
         <input id="url" name="url" type="url" maxlength="2048" placeholder="https://…" aria-describedby="job-help">
@@ -84,6 +85,7 @@
         <div class="actions">
           <button id="copy" type="button" class="secondary">Copiar texto</button>
           <button id="download" type="button" class="secondary">Baixar .txt</button>
+          <button id="download-pdf" type="button" class="secondary">Baixar PDF</button>
           <button id="print" type="button" class="secondary">Imprimir / PDF</button>
         </div>
         <details id="evidence"><summary>Trechos do currículo usados</summary><ul id="quotes"></ul></details>

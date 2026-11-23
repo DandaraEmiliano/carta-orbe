@@ -1,7 +1,12 @@
 package br.dev.cartaorbe;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.ByteArrayOutputStream;
 import java.util.Map;
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.text.PDFTextStripper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -13,6 +18,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -60,6 +66,48 @@ class LetterApiTest {
         http.perform(post("/api/vacancy").contentType(MediaType.APPLICATION_JSON)
                         .content("{\"url\":\"https://exemplo.test/vaga\"}"))
                 .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void exportsOnePageAndExtractsAccentedTextBackIntoTheForm() throws Exception {
+        String letter = """
+                Estimado equipo de selección:
+
+                Mi experiencia en ingeniería incluye el diseño de APIs de seguimiento de entregas.
+                También escribí pruebas de integración y documentación para la recuperación.
+
+                Atentamente,
+                João García
+                """;
+        byte[] pdf = http.perform(post("/api/export/pdf").contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(Map.of("text", letter))))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Cache-Control", "no-store"))
+                .andExpect(header().string("Content-Disposition", "attachment; filename=\"carta-orbe.pdf\""))
+                .andExpect(content().contentType(MediaType.APPLICATION_PDF))
+                .andReturn().getResponse().getContentAsByteArray();
+
+        try (PDDocument document = Loader.loadPDF(pdf)) {
+            assertThat(document.getNumberOfPages()).isEqualTo(1);
+            assertThat(new PDFTextStripper().getText(document)).contains("selección", "João García");
+        }
+        var upload = new MockMultipartFile("file", "curriculo.pdf", "application/pdf", pdf);
+        http.perform(multipart("/api/resume").file(upload))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.pdf").value(true))
+                .andExpect(jsonPath("$.text", containsString("João García")));
+    }
+
+    @Test
+    void suggestsOcrForAPdfWithoutSelectableText() throws Exception {
+        try (var document = new PDDocument(); var bytes = new ByteArrayOutputStream()) {
+            document.addPage(new PDPage());
+            document.save(bytes);
+            var file = new MockMultipartFile("file", "digitalizado.pdf", "application/pdf", bytes.toByteArray());
+            http.perform(multipart("/api/resume").file(file))
+                    .andExpect(status().isUnprocessableEntity())
+                    .andExpect(jsonPath("$.detail", containsString("OCR")));
+        }
     }
 
     @Test
